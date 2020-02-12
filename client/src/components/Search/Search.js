@@ -26,12 +26,12 @@ class Search extends Component {
     this.handleOutsideClick = this.handleOutsideClick.bind(this);
   }
 
-  // componentDidMount() {
-  //   window.addEventListener("itemChanged", event => {
-  //     this.setState({ listingId: Number(event.detail.listingId) });
-  //   });
-  //   this.getSearchItems();
-  // }
+  componentDidMount() {
+    window.addEventListener("itemChanged", event => {
+      this.setState({ listingId: Number(event.detail.listingId) });
+    });
+    this.getSearchItems();
+  }
 
   getSearchItems() {
     axios

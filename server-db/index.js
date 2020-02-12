@@ -23,6 +23,16 @@ connection.connect();
 
 let port = 3030;
 
+app.get('/api/searchItems', (req,res) => {
+  connection.query('SELECT * FROM search', function (error, results) {
+      if (error) {
+        console.log('Error: ', error);
+        res.status(404).send(error)
+      };
+      res.status(200).send(results);
+    });
+})
+
 app.listen(port, function() {
   console.log(`listening on port ${port}`);
 });
