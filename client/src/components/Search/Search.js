@@ -15,7 +15,7 @@ class Search extends Component {
       array: [],
       current: [],
       currentHighlighted: "",
-      popular: [],
+      // popular: [],
       query: "",
       show: false,
       searchActive: false,
@@ -30,19 +30,15 @@ class Search extends Component {
     window.addEventListener("itemChanged", event => {
       this.setState({ listingId: Number(event.detail.listingId) });
     });
-    this.getSearchItems();
+    // this.getSearchItems();
   }
 
   getSearchItems() {
     axios
-      .get("/api/searchItems", {
-        baseURL
-      })
+      .get(baseURL + "api/searchItems" + "?search=" + this.state.query)
       .then(results => {
         this.setState({ array: results.data });
-      })
-      .then(results => {
-        this.setState({ popular: this.getTopTenQueries(this.state.array) });
+        console.log(this.state.array)
       })
       .catch(error => {
         console.error(error);
@@ -83,23 +79,6 @@ class Search extends Component {
     window.dispatchEvent(event);
   }
 
-  getTopTenQueries(array) {
-    let top = array.sort((a, b) => {
-      if (a.views < b.views) {
-        return -1;
-      }
-      if (a.views > b.views) {
-        return 1;
-      }
-      return 0;
-    });
-    let result = [];
-    for (let i = top.length - 10; i < top.length; i++) {
-      result.push(top[i]);
-    }
-    return result;
-  }
-
   onSearchChange() {
     if (this.state.query.length <= 75) {
       Promise.resolve(this.setState({ query: event.target.value })).then(x => {
@@ -114,6 +93,7 @@ class Search extends Component {
             }
           }
           this.setState({ current: temp });
+          this.getSearchItems();
         }
       });
     } else if (event.target.value.length < this.state.query.length) {
@@ -129,6 +109,7 @@ class Search extends Component {
             }
           }
           this.setState({ current: temp });
+          this.getSearchItems();
         }
       });
     }
@@ -205,7 +186,7 @@ class Search extends Component {
               show={this.state.show}
               query={this.state.query}
               current={this.state.current}
-              popular={this.state.popular}
+              popular={this.state.array}
               onHoverSubmit={this.onHoverSubmit.bind(this)}
             />
           </div>
